@@ -1,2 +1,2 @@
 # WP-Custom-Registration-Redirect
-allows you to implement a url to redirect to after a user registers
+Wordpress plugin that allows you to implement a url to redirect to after a user completes the registration form
