@@ -45,10 +45,20 @@ function custom_registration_redirect_url_callback() {
     echo '<input type="text" name="custom_registration_redirect_settings[redirect_url]" value="' . esc_attr($redirect_url) . '" />';
 }
 
-// Apply registration redirect
-add_filter('registration_redirect', 'custom_registration_redirect', 10, 2);
-function custom_registration_redirect($redirect_to, $user) {
+
+
+// Auto login after registration
+function auto_login_after_registration($user_id) {
+    $user = get_userdata($user_id);
+    $user_login = $user->user_login;
+
+    wp_set_auth_cookie($user_id);
+    do_action('wp_login', $user_login, $user);
+
     $options = get_option('custom_registration_redirect_settings');
     $redirect_url = isset($options['redirect_url']) ? $options['redirect_url'] : '';
-    return $redirect_url ? esc_url_raw($redirect_url) : $redirect_to;
+    wp_redirect($redirect_url ? esc_url_raw($redirect_url) : $redirect_to);
+    exit;
 }
+
+add_action('user_register', 'auto_login_after_registration');
